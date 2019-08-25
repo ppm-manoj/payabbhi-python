@@ -67,3 +67,6 @@ class APIResource(http_client.HTTPClient):
 
     def _delete(self, _id, **kwargs):
         return self.request('DELETE', self.instance_url(_id), self.client, data=None, **kwargs)
+
+    def _patch(self, _id, **kwargs):
+        return self.request('PATCH', self.instance_url(_id), self.client, data=None, **kwargs)

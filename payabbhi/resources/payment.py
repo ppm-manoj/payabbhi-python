@@ -53,6 +53,21 @@ class Payment(APIResource):
         url = "{0}/refunds".format(self.instance_url(payment_id))
         return self._get(url, data, **kwargs)
 
+    def virtual_account(self, payment_id, data=None, **kwargs):
+        """"
+        Retrieve virtual_account details for given payment Id
+        Args:
+            payment_id: Payment identifier for which virtual_account details has to be retrieved
+        Returns:
+            Returns a payment object, given a valid payment identifier was provided, and returns
+            an error otherwise.
+        """
+        if data is None:
+            data = {}
+
+        url = "{0}/virtual_account".format(self.instance_url(payment_id))
+        return self._get(url, data, **kwargs)
+
     def capture(self, data=None, **kwargs):
         """"
         Captures the Payment object
@@ -95,12 +110,31 @@ class Payment(APIResource):
 
         return refund
 
+    def transfer(self, source_id, data, **kwargs):
+        """"
+        Create Transfer from given data
+        Args:
+            source_id: The identifier of the source for which transfers need to be created.
+            data : Dictionary having keys using which transfer has to be created
+                transfers: List of transfers to be created with following details
+                recipient_id: The identifier of recipient of this transfer
+                description: Description of the Transfer.
+                amount:  Amount of Transfer
+                currency: Currency used in Transfer
+                notes: key value pair as notes
+        Returns:
+            Transfer object containing data for created transfers
+        """
+        url = "{0}/transfer".format(self.instance_url(source_id))
+        return self._post(url, data, **kwargs)
+
+
     def transfers(self, payment_id, data=None, **kwargs):
         """"
         Retrieve Transfers for given payment Id
         Args:
             payment_id: Payment identifier for which transfers has to be retrieved
-            data : Dictionary having keys using which refund list will be filtered
+            data : Dictionary having keys using which transfer list will be filtered
                 count:           Count of transfers to be retrieved
                 skip:            Number of transfers to be skipped
                 to:              Transfer list till this timestamp will be retrieved
